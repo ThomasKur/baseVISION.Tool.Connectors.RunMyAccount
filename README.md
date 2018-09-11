@@ -1,6 +1,6 @@
 # RunMyAccount API Client
 
-This library allows connecting to the RunMyAccount API to list the most important entities and creating invoices.
+This library allows connecting to the RunMyAccount API. This allows you to create integrated applications with youre invoicing system.
 
 ## Getting Started
 
@@ -22,7 +22,7 @@ Retrieve all invoices:
 List<RunMyAccountsInvoiceExist> invoices = client.ListAllInvoices();
 ```
 
-Creating a new client:
+Creating a new invoice:
 ```
 RunMyAccountsInvoice i = new RunMyAccountsInvoice();
 client.CreateInvoice(i);
