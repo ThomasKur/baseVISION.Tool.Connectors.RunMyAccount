@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>1.0.0: First Release</PackageReleaseNotes>
+    <RepositoryType>Git</RepositoryType>
+    <RepositoryUrl>https://github.com/ThomasKur/baseVISION.Tool.Connectors.RunMyAccount</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ThomasKur/baseVISION.Tool.Connectors.RunMyAccount</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ThomasKur/baseVISION.Tool.Connectors.RunMyAccount/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>Thomas Kurth</Copyright>
+    <Description>This library allows connecting to the RunMyAccount API. This allows you to create integrated applications with youre invoicing system.</Description>
+    <Company>Thomas Kurth</Company>
+    <Authors>Thomas Kurth</Authors>
+    <Product>RunMyAccounts API Client</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="RestSharp" Version="106.3.0" />
+  </ItemGroup>
+
+</Project>
