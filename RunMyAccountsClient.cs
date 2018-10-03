@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace baseVISION.Tool.Connectors.RunMyAccount
 {
@@ -85,6 +86,8 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         }
         public void CreateInvoice(RunMyAccountsInvoice i)
         {
+            Regex rgx = new Regex("[^a-zA-Z0-9_\\.\\-\\\\]");
+            i.ordnumber = rgx.Replace(i.ordnumber, "");
             var request = new RestRequest("{tenant}/invoices", Method.POST);
             request.RequestFormat = DataFormat.Json;
             request.JsonSerializer = serializer;
