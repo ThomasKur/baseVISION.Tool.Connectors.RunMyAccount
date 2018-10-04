@@ -4,7 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>1.0.0: First Release</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.1: Replace special characters in ordernumber 
+1.0.0: First Release</PackageReleaseNotes>
     <RepositoryType>Git</RepositoryType>
     <RepositoryUrl>https://github.com/ThomasKur/baseVISION.Tool.Connectors.RunMyAccount</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ThomasKur/baseVISION.Tool.Connectors.RunMyAccount</PackageProjectUrl>
