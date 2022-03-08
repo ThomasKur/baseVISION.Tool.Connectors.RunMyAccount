@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace baseVISION.Tool.Connectors.RunMyAccount.Model
 {
@@ -49,6 +50,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Model
         public bool taxincluded { get; set; }
         public string dcn { get; set; }
         public string customernumber { get; set; }
+        
         public RunMyAccountsArticleList parts { get; set; }
     }
 }

@@ -39,7 +39,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
         }
 
         [TestMethod()]
-        public void ListCustomersAsyncTest()
+        public void ListCustomersTest()
         {
 
             try
@@ -49,6 +49,42 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
                 var cus = RmaCon.ListCustomers();
                 Assert.IsTrue(cus.Count > 1);
                 
+            }
+            catch (Exception e)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod()]
+        public void ListAllInvoicesTest()
+        {
+
+            try
+            {
+                Initialize();
+
+                var cus = RmaCon.ListAllInvoices();
+                Assert.IsTrue(cus.Count > 1);
+
+            }
+            catch (Exception e)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod()]
+        public void ListAllArticlesTest()
+        {
+
+            try
+            {
+                Initialize();
+
+                var cus = RmaCon.ListAllArticles();
+                Assert.IsTrue(cus.Count > 1);
+
             }
             catch (Exception e)
             {

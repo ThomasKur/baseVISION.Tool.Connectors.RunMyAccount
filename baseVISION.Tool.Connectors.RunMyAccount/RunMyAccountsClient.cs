@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -25,6 +27,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             RestClientOptions option = new RestClientOptions("https://service.runmyaccounts.com/api/latest/clients/");
             option.Encoding = Encoding.UTF8;
             client = new RestClient(option);
+            client.UseSerializer(() => new NewtonsoftJsonSerializer());
             client.AddDefaultHeader("ContentType", "application/json");
             client.AddDefaultParameter("api_key", apikey, ParameterType.QueryString);
             client.AddDefaultParameter("tenant", tenant, ParameterType.UrlSegment);
@@ -34,11 +37,14 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
+           
+
             ApiKey = apikey;
 
             RestClientOptions option = new RestClientOptions(url);
             option.Encoding = Encoding.UTF8;
             client = new RestClient(option);
+            client.UseSerializer(() => new NewtonsoftJsonSerializer());
             client.AddDefaultHeader("ContentType", "application/json");
             client.AddDefaultParameter("api_key", apikey, ParameterType.QueryString);
             client.AddDefaultParameter("tenant", tenant, ParameterType.UrlSegment);

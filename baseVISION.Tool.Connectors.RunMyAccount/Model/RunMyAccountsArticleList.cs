@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace baseVISION.Tool.Connectors.RunMyAccount.Model
 {
@@ -10,6 +11,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Model
         {
             part = new List<RunMyAccountsArticle>();
         }
+        [JsonConverter(typeof(SingleOrArrayConverter<RunMyAccountsArticle>))]
         public List<RunMyAccountsArticle> part { get; set; }
     }
 }

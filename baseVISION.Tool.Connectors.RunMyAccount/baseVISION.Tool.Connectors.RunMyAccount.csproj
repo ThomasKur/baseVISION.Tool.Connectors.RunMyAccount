@@ -4,7 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>2.0.1: Stable Release
+    <PackageReleaseNotes>2.0.2: Bugfix Json Convert of Articles
+2.0.1: Stable Release
 2.0.0-alpha: Remove JSON.Net dependency and update RestSharp to 107
 1.0.2: Updating Json.NET and RestSharp
 1.0.1: Replace special characters in ordernumber 
@@ -18,11 +19,12 @@
     <Company>Thomas Kurth</Company>
     <Authors>Thomas Kurth</Authors>
     <Product>RunMyAccounts API Client</Product>
-    <Version>2.0.1</Version>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+    <Version>2.0.2</Version>
+    <AssemblyVersion>2.0.2.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RestSharp" Version="107.3.0" />
   </ItemGroup>
 
