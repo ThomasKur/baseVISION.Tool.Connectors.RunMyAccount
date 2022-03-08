@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace baseVISION.Tool.Connectors.RunMyAccount
 {
@@ -14,40 +15,40 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
     {
         private string ApiKey;
         private RestClient client;
-        public NewtonsoftJsonSerializer serializer = null;
+
         public RunMyAccountsClient(string tenant, string apikey)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls | SecurityProtocolType.Ssl3;
 
             ApiKey = apikey;
-            client = new RestClient("https://service.runmyaccounts.com/api/latest/clients/");
-            client.Encoding = Encoding.UTF8;
+            
+            RestClientOptions option = new RestClientOptions("https://service.runmyaccounts.com/api/latest/clients/");
+            option.Encoding = Encoding.UTF8;
+            client = new RestClient(option);
             client.AddDefaultHeader("ContentType", "application/json");
             client.AddDefaultParameter("api_key", apikey, ParameterType.QueryString);
             client.AddDefaultParameter("tenant", tenant, ParameterType.UrlSegment);
 
-            // Setting up JSON Serialization Engine
-            serializer = NewtonsoftJsonSerializer.Default;
         }
         public RunMyAccountsClient(string tenant, string apikey, string url)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             ApiKey = apikey;
-            client = new RestClient(url);
-            client.Encoding = Encoding.UTF8;
+
+            RestClientOptions option = new RestClientOptions(url);
+            option.Encoding = Encoding.UTF8;
+            client = new RestClient(option);
             client.AddDefaultHeader("ContentType", "application/json");
             client.AddDefaultParameter("api_key", apikey, ParameterType.QueryString);
             client.AddDefaultParameter("tenant", tenant, ParameterType.UrlSegment);
 
-            // Setting up JSON Serialization Engine
-            serializer = NewtonsoftJsonSerializer.Default;
         }
-        public List<RunMyAccountsContact> ListCustomers()
+        public async Task<List<RunMyAccountsContact>> ListCustomersAsync()
         {
-            var request = new RestRequest("{tenant}/customers", Method.GET);
+            var request = new RestRequest("{tenant}/customers", Method.Get);
             request.RequestFormat = DataFormat.Json;
-            var response = client.Execute<RunMyAccountsContactList>(request);
+            var response = await client.ExecuteAsync<RunMyAccountsContactList>(request);
             if (response.ErrorException != null)
             {
                 throw new Exception("Failed to get RMA Contacts: " + response.ErrorMessage);
@@ -58,17 +59,23 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             }
             return response.Data.customer.ToList<RunMyAccountsContact>();
         }
-        
-        public void CreateCustomer(RunMyAccountsContact r)
+        public List<RunMyAccountsContact> ListCustomers()
+        {
+            var task = ListCustomersAsync();
+            task.Wait();
+            return task.Result;
+        }
+
+        public async Task CreateCustomerAsync(RunMyAccountsContact r)
         {
             
-            var request = new RestRequest("{tenant}/customers", Method.POST);
+            var request = new RestRequest("{tenant}/customers", Method.Post);
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = serializer;
+           // request.JsonSerializer = serializer;
             request.AddBody(r);
             try
             {
-                var response = client.Execute(request);
+                var response = await client.ExecuteAsync(request);
                 if (response.ErrorException != null)
                 {
                     throw new Exception("Failed to add RMA Contact: " + response.ErrorMessage);
@@ -84,29 +91,43 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             }
             
         }
-        public void CreateInvoice(RunMyAccountsInvoice i)
+        public void CreateCustomer(RunMyAccountsContact r)
+        {
+
+            var task = CreateCustomerAsync(r);
+            task.Wait();
+
+        }
+
+        public async Task CreateInvoiceAsync(RunMyAccountsInvoice i)
         {
             Regex rgx = new Regex("[^a-zA-Z0-9_\\.\\-\\\\]");
             i.ordnumber = rgx.Replace(i.ordnumber, "");
-            var request = new RestRequest("{tenant}/invoices", Method.POST);
+            var request = new RestRequest("{tenant}/invoices", Method.Post);
             request.RequestFormat = DataFormat.Json;
-            request.JsonSerializer = serializer;
+            // request.JsonSerializer = serializer;
             request.AddBody(i);
-            var response = client.Execute(request);
+            var response = await client.ExecuteAsync(request);
             if (response.ErrorException != null)
             {
                 throw new Exception("Failed to add RMA Invoice: " + response.ErrorMessage);
             }
             if (response.Content.Contains("{ \"error\": \""))
             {
-               throw new Exception("Failed to add RMA Invoice: " + response.Content);
+                throw new Exception("Failed to add RMA Invoice: " + response.Content);
             }
         }
-        public List<RunMyAccountsInvoiceExist> ListAllInvoices()
+        public void CreateInvoice(RunMyAccountsInvoice i)
         {
-            var request = new RestRequest("{tenant}/invoices", Method.GET);
+            var task = CreateInvoiceAsync(i);
+            task.Wait();
+        }
+        
+        public async Task<List<RunMyAccountsInvoiceExist>> ListAllInvoicesAsync()
+        {
+            var request = new RestRequest("{tenant}/invoices", Method.Get);
             request.RequestFormat = DataFormat.Json;
-            var response = client.Execute<RunMyAccountsInvoiceExistList>(request);
+            var response = await client.ExecuteAsync<RunMyAccountsInvoiceExistList>(request);
             if (response.ErrorException != null)
             {
                 throw new Exception("Failed to get RMA Invoices: " + response.ErrorMessage);
@@ -117,9 +138,17 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             }
             return response.Data.invoice.ToList<RunMyAccountsInvoiceExist>();
         }
-        public List<RunMyAccountsSaldo> ListAllSaldo(string accno, DateTime? from, DateTime? to)
+        public List<RunMyAccountsInvoiceExist> ListAllInvoices()
         {
-            var request = new RestRequest("{tenant}/gl/saldo", Method.GET);
+            var task = ListAllInvoicesAsync();
+            task.Wait();
+            return task.Result;
+        }
+
+
+        public async Task<List<RunMyAccountsSaldo>> ListAllSaldoAsync(string accno, DateTime? from, DateTime? to)
+        {
+            var request = new RestRequest("{tenant}/gl/saldo", Method.Get);
             request.RequestFormat = DataFormat.Json;
             request.AddQueryParameter("accno", accno);
             request.AddQueryParameter("exclude_yearend_bookings", "true");
@@ -132,7 +161,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
                 request.AddQueryParameter("to", to.Value.ToString("yyyy-MM-dd"));
             }
             request.Timeout = 3000;
-            var response = client.Execute<RunMyAccountsSaldoList>(request);
+            var response = await client.ExecuteAsync<RunMyAccountsSaldoList>(request);
             if (response.ErrorException != null)
             {
                 throw new Exception("Failed to get RMA Saldo: " + response.ErrorMessage);
@@ -143,12 +172,19 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             }
             return response.Data.row.ToList<RunMyAccountsSaldo>();
         }
-        public RunMyAccountsInvoiceExist GetInvoice(string invoicenr)
+        public List<RunMyAccountsSaldo> ListAllSaldo(string accno, DateTime? from, DateTime? to)
         {
-            var request = new RestRequest("{tenant}/invoices/{invoicenr}", Method.GET);
+            var task = ListAllSaldoAsync(accno, from, to);
+            task.Wait();
+            return task.Result;
+        }
+
+        public async Task<RunMyAccountsInvoiceExist> GetInvoiceAsync(string invoicenr)
+        {
+            var request = new RestRequest("{tenant}/invoices/{invoicenr}", Method.Get);
             request.AddParameter("invoicenr", invoicenr, ParameterType.UrlSegment);
             request.RequestFormat = DataFormat.Json;
-            var response = client.Execute<RunMyAccountsInvoiceExist>(request);
+            var response = await client.ExecuteAsync<RunMyAccountsInvoiceExist>(request);
             if (response.ErrorException != null)
             {
                 throw new Exception("Failed to get RMA Invoice " + invoicenr + ": " + response.ErrorMessage);
@@ -159,11 +195,18 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             }
             return response.Data;
         }
-        public List<RunMyAccountsArticle> ListAllArticles()
+        public RunMyAccountsInvoiceExist GetInvoice(string invoicenr)
         {
-            var request = new RestRequest("{tenant}/parts", Method.GET);
+            var task = GetInvoiceAsync(invoicenr);
+            task.Wait();
+            return task.Result;
+        }
+
+        public async Task<List<RunMyAccountsArticle>> ListAllArticlesAsync()
+        {
+            var request = new RestRequest("{tenant}/parts", Method.Get);
             request.RequestFormat = DataFormat.Json;
-            var response = client.Execute<RunMyAccountsArticleList>(request);
+            var response = await client.ExecuteAsync<RunMyAccountsArticleList>(request);
             if (response.ErrorException != null)
             {
                 throw new Exception("Failed to get RMA Articles: " + response.ErrorMessage);
@@ -174,13 +217,20 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             }
             return response.Data.part.ToList<RunMyAccountsArticle>();
         }
-        public byte[] DownloadInvoicePDF(string invoicenr)
+        public List<RunMyAccountsArticle> ListAllArticles()
         {
-            var request = new RestRequest("{tenant}/invoices/{invoicenr}/pdf", Method.GET);
+            var task = ListAllArticlesAsync();
+            task.Wait();
+            return task.Result;
+        }
+
+        public async Task<byte[]> DownloadInvoicePDFAsync(string invoicenr)
+        {
+            var request = new RestRequest("{tenant}/invoices/{invoicenr}/pdf", Method.Get);
             request.AddParameter("invoicenr", invoicenr, ParameterType.UrlSegment);
             request.RequestFormat = DataFormat.Json;
             request.AddHeader("Accept", "application/pdf");
-            var response = client.Execute(request);
+            var response = await client.ExecuteAsync(request);
             if (response.ErrorException != null)
             {
                 throw new Exception("Failed to download RMA Invoice PDF " + invoicenr + ": " + response.ErrorMessage);
@@ -191,6 +241,13 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             }
             return response.RawBytes;
         }
+        public byte[] DownloadInvoicePDF(string invoicenr)
+        {
+            var task = DownloadInvoicePDFAsync(invoicenr);
+            task.Wait();
+            return task.Result;
+        }
+
         public void DownloadInvoicePDF(string invoicenr, string savePath)
         {
             byte[] file = DownloadInvoicePDF(invoicenr);
