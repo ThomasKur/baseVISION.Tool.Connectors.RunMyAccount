@@ -4,7 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>2.0.0: Remove JSON.Net dependency and update RestSharp to 107
+    <PackageReleaseNotes>2.0.1: Stable Release
+2.0.0-alpha: Remove JSON.Net dependency and update RestSharp to 107
 1.0.2: Updating Json.NET and RestSharp
 1.0.1: Replace special characters in ordernumber 
 1.0.0: First Release</PackageReleaseNotes>
@@ -17,7 +18,8 @@
     <Company>Thomas Kurth</Company>
     <Authors>Thomas Kurth</Authors>
     <Product>RunMyAccounts API Client</Product>
-    <Version>2.0.0-alpha</Version>
+    <Version>2.0.1</Version>
+    <AssemblyVersion>2.0.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
