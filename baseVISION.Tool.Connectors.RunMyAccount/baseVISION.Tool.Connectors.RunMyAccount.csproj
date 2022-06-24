@@ -4,7 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>2.0.2: Bugfix Json Convert of Articles
+    <PackageReleaseNotes>2.0.3: Update Restsharp, Improve Multithreading and add Timeout of 10 seconds
+2.0.2: Bugfix Json Convert of Articles
 2.0.1: Stable Release
 2.0.0-alpha: Remove JSON.Net dependency and update RestSharp to 107
 1.0.2: Updating Json.NET and RestSharp
@@ -20,12 +21,13 @@
     <Authors>Thomas Kurth</Authors>
     <Product>RunMyAccounts API Client</Product>
     <Version>2.0.2</Version>
-    <AssemblyVersion>2.0.2.0</AssemblyVersion>
+    <AssemblyVersion>2.0.3.0</AssemblyVersion>
+    <FileVersion>2.0.3.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RestSharp" Version="107.3.0" />
+    <PackageReference Include="RestSharp" Version="108.0.1" />
   </ItemGroup>
 
 </Project>

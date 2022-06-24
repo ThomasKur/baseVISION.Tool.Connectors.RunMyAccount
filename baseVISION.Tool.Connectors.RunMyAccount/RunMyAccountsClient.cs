@@ -26,6 +26,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             
             RestClientOptions option = new RestClientOptions("https://service.runmyaccounts.com/api/latest/clients/");
             option.Encoding = Encoding.UTF8;
+            option.MaxTimeout = 10000;
             client = new RestClient(option);
             client.UseSerializer(() => new NewtonsoftJsonSerializer());
             client.AddDefaultHeader("ContentType", "application/json");
@@ -37,12 +38,11 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-           
-
             ApiKey = apikey;
 
             RestClientOptions option = new RestClientOptions(url);
             option.Encoding = Encoding.UTF8;
+            option.MaxTimeout = 10000;
             client = new RestClient(option);
             client.UseSerializer(() => new NewtonsoftJsonSerializer());
             client.AddDefaultHeader("ContentType", "application/json");
@@ -67,9 +67,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         }
         public List<RunMyAccountsContact> ListCustomers()
         {
-            var task = ListCustomersAsync();
-            task.Wait();
-            return task.Result;
+            return Task.Run(() => ListCustomersAsync()).Result;
         }
 
         public async Task CreateCustomerAsync(RunMyAccountsContact r)
@@ -99,10 +97,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         }
         public void CreateCustomer(RunMyAccountsContact r)
         {
-
-            var task = CreateCustomerAsync(r);
-            task.Wait();
-
+            Task.Run(() => CreateCustomerAsync(r));
         }
 
         public async Task CreateInvoiceAsync(RunMyAccountsInvoice i)
@@ -125,8 +120,8 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         }
         public void CreateInvoice(RunMyAccountsInvoice i)
         {
-            var task = CreateInvoiceAsync(i);
-            task.Wait();
+
+            Task.Run(() => CreateInvoiceAsync(i));
         }
         
         public async Task<List<RunMyAccountsInvoiceExist>> ListAllInvoicesAsync()
@@ -146,9 +141,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         }
         public List<RunMyAccountsInvoiceExist> ListAllInvoices()
         {
-            var task = ListAllInvoicesAsync();
-            task.Wait();
-            return task.Result;
+            return Task.Run(() => ListAllInvoicesAsync()).Result;
         }
 
 
@@ -180,9 +173,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         }
         public List<RunMyAccountsSaldo> ListAllSaldo(string accno, DateTime? from, DateTime? to)
         {
-            var task = ListAllSaldoAsync(accno, from, to);
-            task.Wait();
-            return task.Result;
+            return Task.Run(() => ListAllSaldoAsync(accno, from, to)).Result;
         }
 
         public async Task<RunMyAccountsInvoiceExist> GetInvoiceAsync(string invoicenr)
@@ -203,9 +194,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         }
         public RunMyAccountsInvoiceExist GetInvoice(string invoicenr)
         {
-            var task = GetInvoiceAsync(invoicenr);
-            task.Wait();
-            return task.Result;
+            return Task.Run(() => GetInvoiceAsync(invoicenr)).Result;
         }
 
         public async Task<List<RunMyAccountsArticle>> ListAllArticlesAsync()
@@ -225,9 +214,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         }
         public List<RunMyAccountsArticle> ListAllArticles()
         {
-            var task = ListAllArticlesAsync();
-            task.Wait();
-            return task.Result;
+            return Task.Run(() => ListAllArticlesAsync()).Result;
         }
 
         public async Task<byte[]> DownloadInvoicePDFAsync(string invoicenr)
@@ -249,9 +236,8 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         }
         public byte[] DownloadInvoicePDF(string invoicenr)
         {
-            var task = DownloadInvoicePDFAsync(invoicenr);
-            task.Wait();
-            return task.Result;
+
+            return Task.Run(() => DownloadInvoicePDFAsync(invoicenr)).Result;
         }
 
         public void DownloadInvoicePDF(string invoicenr, string savePath)

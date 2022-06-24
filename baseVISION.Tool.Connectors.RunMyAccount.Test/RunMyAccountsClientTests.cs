@@ -66,7 +66,10 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
 
                 var cus = RmaCon.ListAllInvoices();
                 Assert.IsTrue(cus.Count > 1);
-
+                cus = RmaCon.ListAllInvoices();
+                Assert.IsTrue(cus.Count > 1);
+                cus = RmaCon.ListAllInvoices();
+                Assert.IsTrue(cus.Count > 1);
             }
             catch (Exception e)
             {
