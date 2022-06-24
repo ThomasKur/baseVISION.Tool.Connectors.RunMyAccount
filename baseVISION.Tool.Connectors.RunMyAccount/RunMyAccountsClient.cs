@@ -99,6 +99,37 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
         {
             Task.Run(() => CreateCustomerAsync(r));
         }
+        public async Task<string> CreateCustomerWithStatusAsync(RunMyAccountsContact r)
+        {
+
+            var request = new RestRequest("{tenant}/customers", Method.Post);
+            request.RequestFormat = DataFormat.Json;
+            // request.JsonSerializer = serializer;
+            request.AddJsonBody(r);
+            try
+            {
+                var response = await client.ExecuteAsync(request);
+                if (response.ErrorException != null)
+                {
+                    throw new Exception("Failed to add RMA Contact: " + response.ErrorMessage);
+
+                }
+                if (response.Content.Contains("{ \"error\": \""))
+                {
+                    throw new Exception("Failed to add RMA Contact: " + response.Content);
+                }
+                return response.Content;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Adding failed with: " + e.StackTrace);
+            }
+            
+        }
+        public string CreateWithStatusCustomer(RunMyAccountsContact r)
+        {
+            return Task.Run(() => CreateCustomerWithStatusAsync(r)).Result;
+        }
 
         public async Task CreateInvoiceAsync(RunMyAccountsInvoice i)
         {
@@ -107,7 +138,8 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             var request = new RestRequest("{tenant}/invoices", Method.Post);
             request.RequestFormat = DataFormat.Json;
             // request.JsonSerializer = serializer;
-            request.AddBody(i);
+            request.AddJsonBody(i);
+            //request.AddBody(i);
             var response = await client.ExecuteAsync(request);
             if (response.ErrorException != null)
             {
@@ -117,13 +149,54 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             {
                 throw new Exception("Failed to add RMA Invoice: " + response.Content);
             }
+            if (response.ResponseStatus == ResponseStatus.Error)
+            {
+                throw new Exception("Failed to create RMA Invoice with 408");
+            }
+            if (response.StatusCode != HttpStatusCode.NoContent)
+            {
+                throw new Exception("Failed to create RMA Invoice with " + response.StatusDescription);
+            }
         }
         public void CreateInvoice(RunMyAccountsInvoice i)
         {
 
             Task.Run(() => CreateInvoiceAsync(i));
         }
-        
+        public async Task<String> CreateInvoiceWithStatusAsync(RunMyAccountsInvoice i)
+        {
+            Regex rgx = new Regex("[^a-zA-Z0-9_\\.\\-\\\\]");
+            i.ordnumber = rgx.Replace(i.ordnumber, "");
+            var request = new RestRequest("{tenant}/invoices", Method.Post);
+            request.RequestFormat = DataFormat.Json;
+            // request.JsonSerializer = serializer;
+            request.AddJsonBody(i);
+            //request.AddBody(i);
+            var response = await client.ExecuteAsync(request);
+            if (response.ErrorException != null)
+            {
+                throw new Exception("Failed to add RMA Invoice: " + response.ErrorMessage);
+            }
+            if (response.Content.Contains("{ \"error\": \""))
+            {
+                throw new Exception("Failed to add RMA Invoice: " + response.Content);
+            }
+            if (response.ResponseStatus == ResponseStatus.Error)
+            {
+                throw new Exception("Failed to create RMA Invoice with 408");
+            }
+            if (response.StatusCode != HttpStatusCode.NoContent)
+            {
+                throw new Exception("Failed to create RMA Invoice with http Status Code" + response.StatusDescription);
+            }
+            return response.Content;
+        }
+        public string CreateInvoiceWithStatus(RunMyAccountsInvoice i)
+        {
+
+            return Task.Run(() => CreateInvoiceWithStatusAsync(i)).Result;
+        }
+
         public async Task<List<RunMyAccountsInvoiceExist>> ListAllInvoicesAsync()
         {
             var request = new RestRequest("{tenant}/invoices", Method.Get);
