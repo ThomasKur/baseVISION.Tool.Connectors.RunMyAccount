@@ -1,10 +1,13 @@
 ﻿using baseVISION.Tool.Connectors.RunMyAccount.Model;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -20,13 +23,13 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
 
         public RunMyAccountsClient(string tenant, string apikey)
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls | SecurityProtocolType.Ssl3;
+            // ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls | SecurityProtocolType.Ssl3;
 
             ApiKey = apikey;
             
             RestClientOptions option = new RestClientOptions("https://service.runmyaccounts.com/api/latest/clients/");
             option.Encoding = Encoding.UTF8;
-            option.MaxTimeout = 10000;
+            option.MaxTimeout = 30000;
             client = new RestClient(option);
             client.UseSerializer(() => new NewtonsoftJsonSerializer());
             client.AddDefaultHeader("ContentType", "application/json");
@@ -197,11 +200,13 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
             return Task.Run(() => CreateInvoiceWithStatusAsync(i)).Result;
         }
 
-        public async Task<List<RunMyAccountsInvoiceExist>> ListAllInvoicesAsync()
+        public async Task<List<RunMyAccountsInvoiceExist>> ListAllInvoicesAsync2()
         {
             var request = new RestRequest("{tenant}/invoices", Method.Get);
             request.RequestFormat = DataFormat.Json;
+            
             var response = await client.ExecuteAsync<RunMyAccountsInvoiceExistList>(request);
+            
             if (response.ErrorException != null)
             {
                 throw new Exception("Failed to get RMA Invoices: " + response.ErrorMessage);
@@ -211,6 +216,24 @@ namespace baseVISION.Tool.Connectors.RunMyAccount
                 throw new Exception("Failed to get RMA Invoices: " + response.Content);
             }
             return response.Data.invoice.ToList<RunMyAccountsInvoiceExist>();
+        }
+        public async Task<List<RunMyAccountsInvoiceExist>> ListAllInvoicesAsync()
+        {
+            HttpClient cl = new HttpClient();
+            cl.Timeout = new TimeSpan(0,0,30);
+            cl.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+            var result = cl.GetAsync("https://service.runmyaccounts.com/api/latest/clients/basevision/invoices?api_key=OGOR1515dkkhuZRpfoOpK7cdoGzHWSv4");
+            result.Wait();
+            var contentstream = await result.Result.Content.ReadAsStringAsync();
+            RunMyAccountsInvoiceExistList l = JsonConvert.DeserializeObject<RunMyAccountsInvoiceExistList>(contentstream);
+            
+            
+            
+            if (contentstream.Contains("{ \"error\": \""))
+            {
+                throw new Exception("Failed to get RMA Invoices: " + contentstream);
+            }
+            return l.invoice.ToList<RunMyAccountsInvoiceExist>();
         }
         public List<RunMyAccountsInvoiceExist> ListAllInvoices()
         {
