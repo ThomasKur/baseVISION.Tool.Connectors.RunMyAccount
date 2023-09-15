@@ -306,6 +306,10 @@ namespace baseVISION.Core.Connectors.RunMyAccount
         {
             return Task.Run(() => ListAllSaldoV2Async(accno, from, to, department, project)).Result;
         }
+        public List<RunMyAccountsSaldoV2> ListAllSaldoV2(string accno, DateTime? from, DateTime? to, String? department, String? project, Boolean exclude_yearend_bookings)
+        {
+            return Task.Run(() => ListAllSaldoV2Async(accno, from, to, department, project, exclude_yearend_bookings)).Result;
+        }
 
         public async Task<List<RunMyAccountsProject>> ListAllProjectsAsync()
         {
