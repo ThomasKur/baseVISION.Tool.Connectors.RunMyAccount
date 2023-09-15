@@ -266,7 +266,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount
 
         public async Task<List<RunMyAccountsSaldoV2>> ListAllSaldoV2Async(string accno, DateTime? from, DateTime? to, String? department, String? project)
         {
-            return await ListAllSaldoV2Async(accno, from, to, department, project, false);
+            return await ListAllSaldoV2Async(accno, from, to, department, project, true);
         }
         public async Task<List<RunMyAccountsSaldoV2>> ListAllSaldoV2Async(string accno, DateTime? from, DateTime? to, String? department, String? project, Boolean exclude_yearend_bookings)
         {
