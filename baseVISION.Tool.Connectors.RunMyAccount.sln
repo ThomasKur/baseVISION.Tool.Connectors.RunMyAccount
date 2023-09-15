@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "baseVISION.Tool.Connectors.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "baseVISION.Tool.Connectors.RunMyAccount.Test", "baseVISION.Tool.Connectors.RunMyAccount.Test\baseVISION.Tool.Connectors.RunMyAccount.Test.csproj", "{8B08123F-0833-43E4-97FE-C12F34E35F5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "baseVISION.Core.Connectors.RunMyAccount", "baseVISION.Core.Connectors.RunMyAccount\baseVISION.Core.Connectors.RunMyAccount.csproj", "{BEBE7319-2F58-4E22-BD14-078F9A535169}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,14 @@ Global
 		{8B08123F-0833-43E4-97FE-C12F34E35F5F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8B08123F-0833-43E4-97FE-C12F34E35F5F}.Release|x64.ActiveCfg = Release|Any CPU
 		{8B08123F-0833-43E4-97FE-C12F34E35F5F}.Release|x64.Build.0 = Release|Any CPU
+		{BEBE7319-2F58-4E22-BD14-078F9A535169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEBE7319-2F58-4E22-BD14-078F9A535169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEBE7319-2F58-4E22-BD14-078F9A535169}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BEBE7319-2F58-4E22-BD14-078F9A535169}.Debug|x64.Build.0 = Debug|Any CPU
+		{BEBE7319-2F58-4E22-BD14-078F9A535169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEBE7319-2F58-4E22-BD14-078F9A535169}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEBE7319-2F58-4E22-BD14-078F9A535169}.Release|x64.ActiveCfg = Release|Any CPU
+		{BEBE7319-2F58-4E22-BD14-078F9A535169}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
