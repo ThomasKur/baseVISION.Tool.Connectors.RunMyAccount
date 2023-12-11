@@ -17,6 +17,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount.Model
         public string tax_accnos { get; set; }
         public string itemnote { get; set; }
         public DateTime price_update { get; set; }
+        public String projectnumber { get; set; }
         public override string ToString()
         {
             return partnumber;

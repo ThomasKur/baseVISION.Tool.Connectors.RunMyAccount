@@ -50,7 +50,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount.Model
         public bool taxincluded { get; set; }
         public string dcn { get; set; }
         public string customernumber { get; set; }
-        
+        public string department { get; set; }
         public RunMyAccountsArticleList parts { get; set; }
     }
 }

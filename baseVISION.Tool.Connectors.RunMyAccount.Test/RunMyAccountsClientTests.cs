@@ -1,10 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using baseVISION.Tool.Connectors.RunMyAccount;
+using baseVISION.Core.Connectors.RunMyAccount;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using baseVISION.Tool.Connectors.RunMyAccount.Test;
+using baseVISION.Core.Connectors.RunMyAccount.Model;
 
 namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
 {
@@ -57,6 +58,24 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
         }
 
         [TestMethod()]
+        public void ListPayableTest()
+        {
+
+            try
+            {
+                Initialize();
+
+                var cus = RmaCon.ListAllPayables(DateTime.Now.AddYears(-1),null);
+                Assert.IsTrue(cus.Count > 1);
+
+            }
+            catch (Exception e)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod()]
         public void ListAllInvoicesTest()
         {
 
@@ -64,12 +83,9 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
             {
                 Initialize();
 
-                var cus = RmaCon.ListAllInvoices();
+                var cus = RmaCon.ListAllInvoices2(DateTime.Now.AddYears(-1), null);
                 Assert.IsTrue(cus.Count > 1);
-                cus = RmaCon.ListAllInvoices();
-                Assert.IsTrue(cus.Count > 1);
-                cus = RmaCon.ListAllInvoices();
-                Assert.IsTrue(cus.Count > 1);
+             
             }
             catch (Exception e)
             {
@@ -101,7 +117,7 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
             try
             {
                 Initialize();
-                Model.RunMyAccountsInvoice i = new Model.RunMyAccountsInvoice();
+                RunMyAccountsInvoice i = new RunMyAccountsInvoice();
                 i.ar_accno = 1100;
                 i.currency = "CHF";
                 i.customernumber = "HC-4141121";
@@ -109,11 +125,11 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
                 i.duedate = DateTime.Now.AddDays(39);
                 i.invnumber = "R00003951";
                 i.ordnumber = "";
-                i.status = Model.InvoiceStatus.OPEN;
+                i.status = InvoiceStatus.OPEN;
                 i.taxincluded = false;
                 i.transdate = DateTime.Now;
-                i.parts = new Model.RunMyAccountsArticleList();
-                i.parts.part.Add(new Model.RunMyAccountsArticle() { description = "Test", discount = 0, expense_accno = "4999", income_accno = "3400", itemnote = "", partnumber = "Service", price_update = new DateTime(2014, 12, 24), quantity = 1, sellprice = 200, tax_accnos = "2201", unit = "h" });
+                i.parts = new RunMyAccountsArticleList();
+                i.parts.part.Add(new RunMyAccountsArticle() { description = "Test", discount = 0, expense_accno = "4999", income_accno = "3400", itemnote = "", partnumber = "Service", price_update = new DateTime(2014, 12, 24), quantity = 1, sellprice = 200, tax_accnos = "2201", unit = "h" });
 
 
 // string result = RmaCon.CreateInvoiceWithStatus(i);
