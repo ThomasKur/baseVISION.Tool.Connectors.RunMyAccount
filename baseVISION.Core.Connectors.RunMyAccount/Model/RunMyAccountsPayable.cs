@@ -20,9 +20,9 @@ namespace baseVISION.Core.Connectors.RunMyAccount.Model
         public string intnotes { get; set; }
         public string taxincluded { get; set; }
         public string dcn { get; set; }
-        public string amount { get; set; }
-        public string netamount { get; set; }
-        public string paid { get; set; }
+        public Double amount { get; set; }
+        public Double netamount { get; set; }
+        public Double paid { get; set; }
         public string paymentAccno { get; set; }
         public RunMyAccountsVendor vendor { get; set; }
         public RunMyAccountsArticleList parts { get; set; }

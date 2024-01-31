@@ -56,11 +56,11 @@ namespace baseVISION.Core.Connectors.RunMyAccount
             var request = new RestRequest("{tenant}/gl/v2/saldo", Method.Get);
             request.RequestFormat = DataFormat.Json;
             request.AddQueryParameter("accno", accno);
-            if (department == null)
+            if (department != null)
             {
                 request.AddQueryParameter("department", department);
             }
-            if (project == null)
+            if (project != null)
             {
                 request.AddQueryParameter("project", project);
             }

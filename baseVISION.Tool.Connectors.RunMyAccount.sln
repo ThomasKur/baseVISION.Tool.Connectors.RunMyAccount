@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "baseVISION.Tool.Connectors.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "baseVISION.Tool.Connectors.RunMyAccount.Test", "baseVISION.Tool.Connectors.RunMyAccount.Test\baseVISION.Tool.Connectors.RunMyAccount.Test.csproj", "{8B08123F-0833-43E4-97FE-C12F34E35F5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "baseVISION.Core.Connectors.RunMyAccount", "baseVISION.Core.Connectors.RunMyAccount\baseVISION.Core.Connectors.RunMyAccount.csproj", "{BEBE7319-2F58-4E22-BD14-078F9A535169}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "baseVISION.Core.Connectors.RunMyAccount", "baseVISION.Core.Connectors.RunMyAccount\baseVISION.Core.Connectors.RunMyAccount.csproj", "{BEBE7319-2F58-4E22-BD14-078F9A535169}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D24A427C-0F5C-4D2B-9964-079185CFD987}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

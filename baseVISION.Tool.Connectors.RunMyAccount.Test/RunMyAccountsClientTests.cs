@@ -76,6 +76,28 @@ namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
         }
 
         [TestMethod()]
+        public void ListMonthlyPayableTest()
+        {
+
+            try
+            {
+                Initialize();
+                int i = 1;
+                DateTime from = new DateTime(DateTime.Now.AddMonths(-i).Year, DateTime.Now.AddMonths(-i).Month, 1);
+                DateTime to = from.AddMonths(1).AddDays(-1);
+                var cus = RmaCon.ListAllSaldoV2("xxxx", from, to, null, "SOC", false);
+                var cus2 = RmaCon.ListAllSaldoV2("xxxx", from, to, null, "", false);
+                var cus3 = RmaCon.ListAllSaldoV2("xxxx", from, to, null, "General", false);
+                Assert.IsTrue(cus.Count > 1);
+
+            }
+            catch (Exception e)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod()]
         public void ListAllInvoicesTest()
         {
 
