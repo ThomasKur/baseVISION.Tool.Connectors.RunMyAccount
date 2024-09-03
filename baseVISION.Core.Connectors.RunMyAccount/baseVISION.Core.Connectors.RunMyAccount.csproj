@@ -10,10 +10,40 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AssemblyVersion>3.0.8</AssemblyVersion>
     <Copyright>baseVISION AG</Copyright>
-    <PackageProjectUrl>https://github.com/ThomasKur/baseVISION.Tool.Connectors.RunMyAccount/tree/master</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/ThomasKur/baseVISION.Tool.Connectors.RunMyAccount/</PackageProjectUrl>
     <Title>RunMyAccounts .NET API Library</Title>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>### 3.0.8
+
+ - New Features
+  - No
+ - Bug fixes
+  - Project and department not supplied in request
+
+### 3.0.7
+
+ - New Features
+  - InvoiceExist object now contains the customer object
+ - Bug fixes
+  - No
+
+### 3.0.6 
+
+ - New Features
+  - Amount and Netamount and Paid of Accounts Payable Object are now a Double data type
+ - Bug fixes
+  - No
+
+### 3.0.0
+
+ - New .NET 8
+ - Changing Namespace</PackageReleaseNotes>
+    <Description>This library allows connecting to the RunMyAccount API. This allows you to create integrated applications with youre invoicing system.</Description>
+    <RepositoryUrl>https://github.com/ThomasKur/baseVISION.Tool.Connectors.RunMyAccount/tree/master</RepositoryUrl>
+    <Authors>Thomas Kurth</Authors>
+    <PackageTags>RunMyAccounts</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,8 +59,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="RestSharp" Version="110.2.0" />
-    <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="110.2.0" />
+    <PackageReference Include="RestSharp" Version="112.0.0" />
+    <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="112.0.0" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

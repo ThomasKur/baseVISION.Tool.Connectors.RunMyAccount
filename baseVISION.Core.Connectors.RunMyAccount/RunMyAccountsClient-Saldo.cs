@@ -31,7 +31,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount
             {
                 request.AddQueryParameter("to", to.Value.ToString("yyyy-MM-dd"));
             }
-            request.Timeout = 3000;
+            request.Timeout = TimeSpan.FromMinutes(5);
             var response = await client.ExecuteAsync<RunMyAccountsSaldoList>(request);
             if (response.ErrorException != null)
             {
@@ -73,7 +73,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount
             {
                 request.AddQueryParameter("to", to.Value.ToString("yyyy-MM-dd"));
             }
-            request.Timeout = 3000;
+            request.Timeout = TimeSpan.FromMinutes(5);
             var response = await client.ExecuteAsync<RunMyAccountsSaldoV2List>(request);
             if (response.ErrorException != null)
             {

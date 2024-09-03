@@ -21,7 +21,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount
         {
             var request = new RestRequest("{tenant}/payables", Method.Get);
             request.RequestFormat = DataFormat.Json;
-            request.Timeout = 300000;
+            request.Timeout = TimeSpan.FromMinutes(5);
 
             if (from != null)
             {

@@ -57,7 +57,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ### 3.0.0
 
-	- New .NET
+	- New .NET 8
+	- Changing Namespace
 
 ### History
 
