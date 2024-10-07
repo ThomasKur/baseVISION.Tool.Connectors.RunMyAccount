@@ -5,17 +5,24 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <FileVersion>3.0.8.0</FileVersion>
-    <Version>3.0.8</Version>
+    <FileVersion>3.0.9.0</FileVersion>
+    <Version>3.0.9</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <AssemblyVersion>3.0.8</AssemblyVersion>
+    <AssemblyVersion>3.0.9</AssemblyVersion>
     <Copyright>baseVISION AG</Copyright>
     <PackageProjectUrl>https://github.com/ThomasKur/baseVISION.Tool.Connectors.RunMyAccount/</PackageProjectUrl>
     <Title>RunMyAccounts .NET API Library</Title>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>### 3.0.8
+    <PackageReleaseNotes>### 3.0.9
+
+ - New Features
+  - No
+ - Bug fixes
+  - Update libraries
+
+### 3.0.8
 
  - New Features
   - No
@@ -63,7 +70,7 @@
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="112.0.0" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <Target Name="PostBuild" AfterTargets="Pack">
     <Exec Command="xcopy &quot;$(TargetDir)..\*.nupkg&quot; &quot;C:\LocalLibrary&quot; /C /Y" />
   </Target>
 

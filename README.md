@@ -34,6 +34,13 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Release Notes
 
+### 3.0.9
+
+	- New Features
+		- No
+	- Bug fixes
+		- Update libraries
+
 ### 3.0.8
 
 	- New Features
