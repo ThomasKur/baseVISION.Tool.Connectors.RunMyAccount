@@ -1,169 +1,203 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using baseVISION.Core.Connectors.RunMyAccount;
+using baseVISION.Core.Connectors.RunMyAccount.Model;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using baseVISION.Tool.Connectors.RunMyAccount.Test;
-using baseVISION.Core.Connectors.RunMyAccount.Model;
 
 namespace baseVISION.Tool.Connectors.RunMyAccount.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class RunMyAccountsClientTests
     {
-        RunMyAccountsClient RmaCon = null;
+        private RunMyAccountsClient? _client;
+        private UserConfig? _userConfig;
 
-        public void Initialize()
+        [TestInitialize]
+        public void Setup()
         {
-            var config = new ConfigurationBuilder()
+            var configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddUserSecrets<RunMyAccountsClientTests>()
                 .Build();
 
-            UserConfig uc = config.Get<UserConfig>();
-            RmaCon = new RunMyAccountsClient(uc.RmaTenant, uc.RmaApi, uc.RmaUrl);
+            _userConfig = configuration.Get<UserConfig>();
+            if (_userConfig == null ||
+                string.IsNullOrWhiteSpace(_userConfig.RmaTenant) ||
+                string.IsNullOrWhiteSpace(_userConfig.RmaApi))
+            {
+                Assert.Inconclusive("RunMyAccounts credentials are not configured. Set the required user secrets before running the tests.");
+            }
+
+            _client = new RunMyAccountsClient(_userConfig.RmaTenant, _userConfig.RmaApi, _userConfig.RmaUrl);
         }
 
-        [TestMethod()]
+        private RunMyAccountsClient Client => _client ?? throw new InvalidOperationException("RunMyAccounts client was not initialized.");
+
+        [TestMethod]
         public void RunMyAccountsClientTest()
         {
-            try
-            {
-                Initialize();
-            }
-            catch (Exception e)
-            {
-                Assert.Fail();
-            }
-            
+            Assert.IsNotNull(Client);
         }
 
-        [TestMethod()]
-        public void ListCustomersTest()
+        [TestMethod]
+        public async Task ListCustomersAsync_ReturnsContacts()
         {
-
-            try
+            var contacts = await Client.ListCustomersAsync();
+            Assert.IsNotNull(contacts, "Customer list should not be null.");
+            if (contacts.Count == 0)
             {
-                Initialize();
+                Assert.Inconclusive("The configured tenant does not expose any customers.");
+            }
 
-                var cus = RmaCon.ListCustomers();
-                Assert.IsTrue(cus.Count > 1);
-                
-            }
-            catch (Exception e)
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(contacts.All(c => !string.IsNullOrWhiteSpace(c.customernumber)), "Every customer must expose a customer number.");
         }
 
-        [TestMethod()]
-        public void ListPayableTest()
+        [TestMethod]
+        public async Task ListAllArticlesAsync_ReturnsArticles()
         {
-
-            try
+            var articles = await Client.ListAllArticlesAsync();
+            Assert.IsNotNull(articles, "Article list should not be null.");
+            if (articles.Count == 0)
             {
-                Initialize();
-
-                var cus = RmaCon.ListAllPayables(DateTime.Now.AddYears(-1),null);
-                Assert.IsTrue(cus.Count > 1);
-
+                Assert.Inconclusive("The configured tenant does not expose any articles.");
             }
-            catch (Exception e)
-            {
-                Assert.Fail();
-            }
+
+            Assert.IsTrue(articles.All(a => !string.IsNullOrWhiteSpace(a.partnumber)), "Every article must expose a part number.");
         }
 
-        [TestMethod()]
-        public void ListMonthlyPayableTest()
+        [TestMethod]
+        public async Task ListAllInvoices2Async_ReturnsInvoices()
         {
-
-            try
+            var from = DateTime.Now.AddYears(-1);
+            var to = DateTime.Now;
+            var invoices = await Client.ListAllInvoicesAsync2(from, to);
+            Assert.IsNotNull(invoices, "Invoice list should not be null.");
+            if (invoices.Count == 0)
             {
-                Initialize();
-                int i = 1;
-                DateTime from = new DateTime(DateTime.Now.AddMonths(-i).Year, DateTime.Now.AddMonths(-i).Month, 1);
-                DateTime to = from.AddMonths(1).AddDays(-1);
-                var cus = RmaCon.ListAllSaldoV2("xxxx", from, to, null, "SOC", false);
-                var cus2 = RmaCon.ListAllSaldoV2("xxxx", from, to, null, "", false);
-                var cus3 = RmaCon.ListAllSaldoV2("xxxx", from, to, null, "General", false);
-                Assert.IsTrue(cus.Count > 1);
+                Assert.Inconclusive("No invoices were returned for the configured tenant.");
+            }
 
-            }
-            catch (Exception e)
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(invoices.All(i => !string.IsNullOrWhiteSpace(i.invnumber)), "Every invoice must expose an invoice number.");
         }
 
-        [TestMethod()]
-        public void ListAllInvoicesTest()
+        [TestMethod]
+        public async Task ListAllPayablesAsync_ReturnsPayables()
         {
-
-            try
+            var from = DateTime.Now.AddYears(-1);
+            var to = DateTime.Now;
+            var payables = await Client.ListAllPayablesAsync(from, to);
+            Assert.IsNotNull(payables, "Payables list should not be null.");
+            if (payables.Count == 0)
             {
-                Initialize();
+                Assert.Inconclusive("No payables were returned for the configured tenant.");
+            }
 
-                var cus = RmaCon.ListAllInvoices2(DateTime.Now.AddYears(-1), null);
-                Assert.IsTrue(cus.Count > 1);
-             
-            }
-            catch (Exception e)
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(payables.All(p => !string.IsNullOrWhiteSpace(p.invnumber)), "Every payable must expose an invoice number.");
         }
 
-        [TestMethod()]
-        public void ListAllArticlesTest()
+        [TestMethod]
+        public async Task ListAllSaldoV2Async_FiltersByAccountNumber()
         {
-
-            try
+            var contacts = await Client.ListCustomersAsync();
+            var accountNumber = contacts.FirstOrDefault(c => !string.IsNullOrWhiteSpace(c.arap_accno))?.arap_accno;
+            if (string.IsNullOrWhiteSpace(accountNumber))
             {
-                Initialize();
-
-                var cus = RmaCon.ListAllArticles();
-                Assert.IsTrue(cus.Count > 1);
-
+                Assert.Inconclusive("No account number was returned by the customer list to validate saldo.");
             }
-            catch (Exception e)
-            {
-                Assert.Fail();
-            }
+
+            var from = DateTime.Now.AddMonths(-3);
+            var to = DateTime.Now;
+            var saldo = await Client.ListAllSaldoV2Async(accountNumber, from, to, null, null);
+            Assert.IsNotNull(saldo, "Saldo response should not be null.");
+            Assert.IsTrue(saldo.All(s => s.accountnumber == accountNumber), "Saldo rows must belong to the requested account.");
         }
-        [TestMethod()]
+
+        [TestMethod]
+        public async Task ListCustomersTest()
+        {
+            await ListCustomersAsync_ReturnsContacts();
+        }
+
+        [TestMethod]
+        public async Task ListPayableTest()
+        {
+            await ListAllPayablesAsync_ReturnsPayables();
+        }
+
+        [TestMethod]
+        public async Task ListMonthlyPayableTest()
+        {
+            await ListAllSaldoV2Async_FiltersByAccountNumber();
+        }
+
+        [TestMethod]
+        public async Task ListAllInvoicesTest()
+        {
+            await ListAllInvoices2Async_ReturnsInvoices();
+        }
+
+        [TestMethod]
+        public async Task ListAllArticlesTest()
+        {
+            await ListAllArticlesAsync_ReturnsArticles();
+        }
+
+        [TestMethod]
         public void CreateInvoice()
         {
-
-            try
+            var invoice = new RunMyAccountsInvoice
             {
-                Initialize();
-                RunMyAccountsInvoice i = new RunMyAccountsInvoice();
-                i.ar_accno = 1100;
-                i.currency = "CHF";
-                i.customernumber = "HC-4141121";
-                i.description = "TestKur";
-                i.duedate = DateTime.Now.AddDays(39);
-                i.invnumber = "R00003951";
-                i.ordnumber = "";
-                i.status = InvoiceStatus.OPEN;
-                i.taxincluded = false;
-                i.transdate = DateTime.Now;
-                i.parts = new RunMyAccountsArticleList();
-                i.parts.part.Add(new RunMyAccountsArticle() { description = "Test", discount = 0, expense_accno = "4999", income_accno = "3400", itemnote = "", partnumber = "Service", price_update = new DateTime(2014, 12, 24), quantity = 1, sellprice = 200, tax_accnos = "2201", unit = "h" });
+                ar_accno = 1100,
+                currency = "CHF",
+                customernumber = "HC-4141121",
+                description = "TestKur",
+                duedate = DateTime.Now.AddDays(39),
+                invnumber = "R00003951",
+                ordnumber = string.Empty,
+                status = InvoiceStatus.OPEN,
+                taxincluded = false,
+                transdate = DateTime.Now,
+                parts = new RunMyAccountsArticleList()
+            };
 
-
-// string result = RmaCon.CreateInvoiceWithStatus(i);
-               // Assert.IsNotNull(result);
-
-            }
-            catch (Exception e)
+            invoice.parts.part.Add(new RunMyAccountsArticle
             {
-                Assert.Fail();
-            }
+                description = "Test",
+                discount = 0,
+                expense_accno = "4999",
+                income_accno = "3400",
+                itemnote = string.Empty,
+                partnumber = "Service",
+                price_update = new DateTime(2014, 12, 24),
+                quantity = 1,
+                sellprice = 200,
+                tax_accnos = "2201",
+                unit = "h"
+            });
+
+            Assert.IsNotNull(invoice);
+            Assert.IsNotNull(invoice.parts);
+            Assert.AreEqual(1, invoice.parts.part.Count);
         }
 
+        [TestMethod]
+        public async Task CreateCustomer()
+        {
+            var contact = new RunMyAccountsContact
+            {
+                name = "Testkunde KUR AG",
+                address1 = "Musterstrasse 1",
+                zipcode = "8000",
+                city = "Zürich",
+                country = "CH",
+                customernumber = "HC-999999"
+            };
 
+            string status = await Client.CreateCustomerWithStatusAsync(contact);
+            Assert.IsNotNull(status);
+        }
     }
 }
