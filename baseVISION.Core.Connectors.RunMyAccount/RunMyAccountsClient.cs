@@ -11,41 +11,52 @@ namespace baseVISION.Core.Connectors.RunMyAccount
 {
     public partial class RunMyAccountsClient
     {
-        private string ApiKey;
+        private string ApiKey = null!;
         private RestClient client;
 
         public RunMyAccountsClient(string tenant, string apikey)
         {
             // ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls | SecurityProtocolType.Ssl3;
 
- 
             Initialize(tenant, apikey, "https://service.runmyaccounts.com/api/latest/clients/");
 
         }
-        public RunMyAccountsClient(string tenant, string apikey, string url)
+        public RunMyAccountsClient(string tenant,  string apikey, string url)
         {
             // ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            if(String.IsNullOrWhiteSpace(url))
+            {
+                url = "https://service.runmyaccounts.com/api/latest/clients/";
+            }
+            if(!url.EndsWith("/"))
+            {
+                url += "/";
+            }
+            
 
             Initialize(tenant, apikey, url);
-
         }
 
         private void Initialize(string tenant, string apikey, string url)
         {
+            if (String.IsNullOrWhiteSpace(tenant))
+            {
+                throw new ArgumentException("Tenant must be provided");
+            }
+            if (String.IsNullOrWhiteSpace(apikey))
+            {
+                throw new ArgumentException("ApiKey must be provided");
+            }
             ApiKey = apikey;
 
             RestClientOptions option = new RestClientOptions(url);
             option.Encoding = Encoding.UTF8;
-            option.MaxTimeout = 300000;
+            option.Timeout = new TimeSpan(0,1,0);
 
             client = new RestClient(option, configureSerialization: s => s.UseSerializer(() => new NewtonsoftJsonSerializer()));
             client.AddDefaultHeader("ContentType", "application/json");
-            client.AddDefaultParameter("api_key", apikey, ParameterType.QueryString);
+            client.AddDefaultHeader("Authorization", $"Bearer {apikey}");
             client.AddDefaultParameter("tenant", tenant, ParameterType.UrlSegment);
         }
-
-
-
-
     }
 }
