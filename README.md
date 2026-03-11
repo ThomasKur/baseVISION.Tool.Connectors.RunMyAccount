@@ -34,6 +34,19 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Release Notes
 
+### 3.0.12
+	- New Features
+		-Switch to new Bearer Token Authentication
+		- Update RestSharp / Json.net
+	- Bug fixes
+		- No
+
+### 3.0.11
+	- New Features
+		- No
+	- Bug fixes
+		- Improved exception handling
+
 ### 3.0.9
 
 	- New Features
@@ -68,6 +81,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 	- Changing Namespace
 
 ### History
+
 
 2.0.5: Get Invoices Timeout Fix with own HttpClient instead of RestSharp
 2.0.4: Retrun status on create methods
