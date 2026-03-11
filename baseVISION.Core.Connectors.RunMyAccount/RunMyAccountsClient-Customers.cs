@@ -48,7 +48,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount
                 var response = await client.ExecuteAsync(request);
                 if (response.ErrorException != null)
                 {
-                    throw new Exception("Failed to add RMA Contact: " + response.ErrorMessage);
+                    throw new Exception("Failed to add RMA Contact: " + response.ErrorException.Message,response.ErrorException);
 
                 }
                 if (response.Content.Contains("{ \"error\": \""))
@@ -58,7 +58,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount
             }
             catch (Exception e)
             {
-                throw new Exception("Adding failed with: " + e.StackTrace);
+                throw new Exception("Adding failed with: " + e.Message + Environment.NewLine + e.StackTrace);
             }
 
         }
@@ -78,7 +78,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount
                 var response = await client.ExecuteAsync(request);
                 if (response.ErrorException != null)
                 {
-                    throw new Exception("Failed to add RMA Contact: " + response.ErrorMessage);
+                    throw new Exception("Failed to add RMA Contact: " + response.ErrorException.Message, response.ErrorException);
 
                 }
                 if (response.Content.Contains("{ \"error\": \""))
@@ -89,7 +89,7 @@ namespace baseVISION.Core.Connectors.RunMyAccount
             }
             catch (Exception e)
             {
-                throw new Exception("Adding failed with: " + e.StackTrace);
+                throw new Exception("Adding failed with: " + e.Message + Environment.NewLine + e.StackTrace);
             }
 
         }
